@@ -29,3 +29,39 @@ exports.createReview = async (req, res, next) => {
     next(error);
   }
 };
+
+// UPDATE a review
+exports.updateReview = async (req, res, next) => {
+  try {
+    const review = await Review.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+
+    res.json(review);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DELETE a review
+exports.deleteReview = async (req, res, next) => {
+  try {
+    const review = await Review.findByIdAndDelete(req.params.id);
+
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+
+    res.json({ message: 'Review deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
