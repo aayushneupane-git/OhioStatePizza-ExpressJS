@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getSpecials, createSpecial } = require('../controller/specialController');
+const specialController = require('../controller/specialController');
 
-router.get('/', getSpecials);
-router.post('/', createSpecial);
+// CRUD routes
+router.get('/', specialController.getSpecials);
+router.get('/:id', specialController.getSpecialById);
+router.post('/', specialController.createSpecial);
+router.put('/:id', specialController.updateSpecial);
+router.delete('/:id', specialController.deleteSpecial);
 
 module.exports = router;

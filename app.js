@@ -12,7 +12,7 @@ const app = express();
 
 app.use(express.json());
 app.use("/api/specials", specialRoutes);
-app.use("/api/menu", menuItemRoutes);
+app.use('/api/menuitems', menuItemRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/stores", storeRoutes);
 app.use("/api/employees", employeeRoutes);
