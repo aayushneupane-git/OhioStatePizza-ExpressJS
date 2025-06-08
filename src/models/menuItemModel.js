@@ -1,18 +1,36 @@
 const mongoose = require('mongoose');
 
-const optionSchema = new mongoose.Schema({
+const optionItemSchema = new mongoose.Schema({
   label: String,
-  price: Number
-});
+  priceModifier: Number
+}, { _id: false });
+
+const optionsSchema = new mongoose.Schema({
+  sizes: [optionItemSchema],
+  addOns: [optionItemSchema],
+  crusts: [optionItemSchema],
+  sauces: [optionItemSchema],
+  meats: [optionItemSchema],
+  veggies: [optionItemSchema],
+  dips: [optionItemSchema],
+  flavors: [optionItemSchema],
+  extras: [optionItemSchema]
+}, { _id: false });
 
 const menuItemSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true },
   description: String,
   category: String,
   price: Number,
-  status: { type: String, enum: ['Available', 'Unavailable'], default: 'Available' },
-  sizes: [optionSchema],
-  addOns: [optionSchema],
+  status: {
+    type: String,
+    enum: ['Available', 'Unavailable'],
+    default: 'Available'
+  },
+  options: {
+    type: optionsSchema,
+    default: {}
+  },
   image: {
     data: Buffer,
     contentType: String

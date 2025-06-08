@@ -1,9 +1,16 @@
 const MenuItem = require('../models/menuItemModel');
 
-// Create
+// CREATE
 exports.createMenuItem = async (req, res) => {
   try {
-    const { name, description, category, price, status, sizes, addOns } = req.body;
+    const {
+      name,
+      description,
+      category,
+      price,
+      status,
+      options // optional, JSON string
+    } = req.body;
 
     const menuItem = new MenuItem({
       name,
@@ -11,8 +18,7 @@ exports.createMenuItem = async (req, res) => {
       category,
       price,
       status,
-      sizes: JSON.parse(sizes),
-      addOns: JSON.parse(addOns)
+      options: options ? JSON.parse(options) : {}
     });
 
     if (req.file) {
@@ -29,17 +35,34 @@ exports.createMenuItem = async (req, res) => {
   }
 };
 
-// Read All
-exports.getAllMenuItems = async (req, res) => {
+// UPDATE
+exports.updateMenuItem = async (req, res) => {
   try {
-    const items = await MenuItem.find();
-    res.status(200).json(items);
+    const updateData = {
+      ...req.body,
+      options: req.body.options ? JSON.parse(req.body.options) : {}
+    };
+
+    if (req.file) {
+      updateData.image = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      };
+    }
+
+    const item = await MenuItem.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!item) return res.status(404).json({ error: 'Item not found' });
+    res.status(200).json(item);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Read by ID
+// READ BY ID
 exports.getMenuItemById = async (req, res) => {
   try {
     const item = await MenuItem.findById(req.params.id);
@@ -56,53 +79,13 @@ exports.getMenuItemById = async (req, res) => {
   }
 };
 
-// Serve Image
-exports.getImageById = async (req, res) => {
-  try {
-    const item = await MenuItem.findById(req.params.id);
-    if (!item || !item.image?.data) return res.status(404).json({ error: 'Image not found' });
-
-    res.set('Content-Type', item.image.contentType);
-    res.send(item.image.data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// Update
-exports.updateMenuItem = async (req, res) => {
-  try {
-    const updatedData = {
-      ...req.body,
-      sizes: req.body.sizes ? JSON.parse(req.body.sizes) : [],
-      addOns: req.body.addOns ? JSON.parse(req.body.addOns) : []
-    };
-
-    if (req.file) {
-      updatedData.image = {
-        data: req.file.buffer,
-        contentType: req.file.mimetype
-      };
-    }
-
-    const item = await MenuItem.findByIdAndUpdate(req.params.id, updatedData, {
-      new: true,
-      runValidators: true
-    });
-
-    if (!item) return res.status(404).json({ error: 'Item not found' });
-    res.status(200).json(item);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// Delete
+// DELETE
 exports.deleteMenuItem = async (req, res) => {
   try {
     const item = await MenuItem.findByIdAndDelete(req.params.id);
     if (!item) return res.status(404).json({ error: 'Item not found' });
-    res.status(200).json({ message: 'Item deleted' });
+
+    res.status(200).json({ message: 'Menu item deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
