@@ -10,8 +10,7 @@ const upload = multer({ storage });
 // Routes
 router.post('/', upload.single('image'), menuItemController.createMenuItem);
 router.get('/', menuItemController.getAllMenuItems);
-router.get('/:id', menuItemController.getMenuItemById);
-router.get('/:id/image', menuItemController.getImageById);
+router.get('/:id', menuItemController.getAllMenuItems);
 router.put('/:id', upload.single('image'), menuItemController.updateMenuItem);
 router.delete('/:id', menuItemController.deleteMenuItem);
 

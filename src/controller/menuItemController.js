@@ -62,6 +62,16 @@ exports.updateMenuItem = async (req, res) => {
   }
 };
 
+// READ ALL
+exports.getAllMenuItems = async (req, res) => {
+  try {
+    const items = await MenuItem.find();
+    res.status(200).json(items);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // READ BY ID
 exports.getMenuItemById = async (req, res) => {
   try {
