@@ -8,17 +8,17 @@ exports.createMenuItem = async (req, res) => {
       description,
       category,
       price,
-      status,
-      options // optional, JSON string
+      options, // JSON string
+      availabilityByStore // JSON string
     } = req.body;
 
     const menuItem = new MenuItem({
       name,
       description,
       category,
-      price,
-      status,
-      options: options ? JSON.parse(options) : {}
+      price: parseFloat(price),
+      options: options ? JSON.parse(options) : {},
+      availabilityByStore: availabilityByStore ? JSON.parse(availabilityByStore) : {}
     });
 
     if (req.file) {
@@ -39,8 +39,12 @@ exports.createMenuItem = async (req, res) => {
 exports.updateMenuItem = async (req, res) => {
   try {
     const updateData = {
-      ...req.body,
-      options: req.body.options ? JSON.parse(req.body.options) : {}
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: parseFloat(req.body.price),
+      options: req.body.options ? JSON.parse(req.body.options) : {},
+      availabilityByStore: req.body.availabilityByStore ? JSON.parse(req.body.availabilityByStore) : {}
     };
 
     if (req.file) {
@@ -66,7 +70,15 @@ exports.updateMenuItem = async (req, res) => {
 exports.getAllMenuItems = async (req, res) => {
   try {
     const items = await MenuItem.find();
-    res.status(200).json(items);
+    const response = items.map(item => {
+      const obj = item.toObject();
+      if (item.image?.data) {
+        obj.imageBase64 = item.image.data.toString('base64');
+      }
+      return obj;
+    });
+
+    res.status(200).json(response);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
