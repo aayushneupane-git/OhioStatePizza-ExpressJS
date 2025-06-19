@@ -29,6 +29,7 @@ const menuItemSchema = new mongoose.Schema({
   },
   options: {
     type: optionsSchema,
+    isMultiple: Boolean,
     default: {}
   },
   image: {
