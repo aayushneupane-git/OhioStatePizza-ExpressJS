@@ -9,7 +9,7 @@ exports.createSpecial = async (req, res) => {
       description,
       price,
       isSpecial: isSpecial === 'true',
-      items: JSON.parse(items)
+      items: items
     });
 
     if (req.file) {
