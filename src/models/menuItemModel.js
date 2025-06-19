@@ -53,10 +53,10 @@ const menuItemSchema = new mongoose.Schema({
     type: optionsSchema,
     default: {}
   },
-  image: {
-    data: Buffer,
-    contentType: String
-  }
+  // image: {
+  //   data: Buffer,
+  //   contentType: String
+  // }
 });
 
 module.exports = mongoose.model("MenuItem", menuItemSchema);

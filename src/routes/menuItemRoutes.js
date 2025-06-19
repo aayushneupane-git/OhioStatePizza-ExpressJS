@@ -8,10 +8,10 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Routes
-router.post('/', upload.single('image'), menuItemController.createMenuItem);
+router.post('/', menuItemController.createMenuItem);
 router.get('/', menuItemController.getAllMenuItems);
-router.get('/:id', menuItemController.getAllMenuItems);
-router.put('/:id', upload.single('image'), menuItemController.updateMenuItem);
+router.get('/:id', menuItemController.getMenuItemById);
+router.put('/:id', menuItemController.updateMenuItem);
 router.delete('/:id', menuItemController.deleteMenuItem);
 
 module.exports = router;
