@@ -10,14 +10,21 @@ dotenv.config();
 
 const app = express();
 
+// 🟢 Add CORS middleware
+const cors = require('cors');
+app.use(cors());
+
+// 🟢 Body parsing middleware (optional, if you’re using JSON)
 app.use(express.json());
+
+// 🟢 API routes
 app.use("/api/specials", specialRoutes);
 app.use('/api/menuitems', menuItemRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/stores", storeRoutes);
 app.use("/api/employees", employeeRoutes);
 
-// Error handler middleware
+// 🟢 Global error handler
 app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });
 });
