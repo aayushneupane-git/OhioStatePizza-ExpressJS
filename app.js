@@ -5,6 +5,7 @@ const menuItemRoutes = require("./src/routes/menuItemRoutes");
 const reviewRoutes = require("./src/routes/reviewRoutes");
 const storeRoutes = require("./src/routes/storeRoutes");
 const employeeRoutes = require("./src/routes/employeeRoutes");
+const nearestStore = require("./src/routes/nearestLocation");
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use('/api/menuitems', menuItemRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/stores", storeRoutes);
 app.use("/api/employees", employeeRoutes);
+app.use("/api/location", nearestStore);
 
 // Error handler middleware
 app.use((err, req, res, next) => {
