@@ -17,8 +17,8 @@ exports.createMenuItem = async (req, res) => {
       description,
       category,
       price: parseFloat(price),
-      options: options ? JSON.parse(options) : {},
-      availabilityByStore: availabilityByStore ? JSON.parse(availabilityByStore) : {}
+      options,
+      availabilityByStore
     });
 
     // if (req.file) {
