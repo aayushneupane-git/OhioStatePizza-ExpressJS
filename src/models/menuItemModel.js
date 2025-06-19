@@ -1,28 +1,40 @@
 const mongoose = require("mongoose");
 
+// Schema for each selectable item in a group
 const optionItemSchema = new mongoose.Schema(
   {
     label: String,
-    priceModifier: Number,
+    priceModifier: Number
   },
   { _id: false }
 );
 
+// Schema for each group of options (e.g., sizes, addOns, etc.)
+const optionGroupSchema = new mongoose.Schema(
+  {
+    isMultiple: { type: Boolean, required: true },
+    values: [optionItemSchema]
+  },
+  { _id: false }
+);
+
+// Complete options schema
 const optionsSchema = new mongoose.Schema(
   {
-    sizes: [optionItemSchema],
-    addOns: [optionItemSchema],
-    crusts: [optionItemSchema],
-    sauces: [optionItemSchema],
-    meats: [optionItemSchema],
-    veggies: [optionItemSchema],
-    dips: [optionItemSchema],
-    flavors: [optionItemSchema],
-    extras: [optionItemSchema],
+    sizes: optionGroupSchema,
+    addOns: optionGroupSchema,
+    crusts: optionGroupSchema,
+    sauces: optionGroupSchema,
+    meats: optionGroupSchema,
+    veggies: optionGroupSchema,
+    dips: optionGroupSchema,
+    flavors: optionGroupSchema,
+    extras: optionGroupSchema
   },
   { _id: false }
 );
 
+// Menu item schema
 const menuItemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
@@ -33,19 +45,18 @@ const menuItemSchema = new mongoose.Schema({
     of: {
       type: String,
       enum: ["Available", "Unavailable"],
-      default: "Available",
+      default: "Available"
     },
-    default: {},
+    default: {}
   },
   options: {
     type: optionsSchema,
-    isMultiple: { type: Boolean, required: true },
-    default: {},
+    default: {}
   },
   image: {
     data: Buffer,
-    contentType: String,
-  },
+    contentType: String
+  }
 });
 
 module.exports = mongoose.model("MenuItem", menuItemSchema);
