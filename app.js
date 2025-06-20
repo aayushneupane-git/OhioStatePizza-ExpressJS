@@ -26,6 +26,12 @@ app.use("/api/stores", storeRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/location", nearestStore);
 
+
+
+app.get('/api/startup-check', (req, res) => {
+  res.status(200).json({ message: 'API is running' });
+})
+
 // 🟢 Global error handler
 app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });

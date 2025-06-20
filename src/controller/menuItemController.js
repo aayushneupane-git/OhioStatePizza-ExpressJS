@@ -44,8 +44,8 @@ exports.updateMenuItem = async (req, res) => {
       description: req.body.description,
       category: req.body.category,
       price: parseFloat(req.body.price),
-      options: req.body.options ? JSON.parse(req.body.options) : {},
-      availabilityByStore: req.body.availabilityByStore ? JSON.parse(req.body.availabilityByStore) : {}
+      options: req.body.options,
+      availabilityByStore: req.body.availabilityByStore
     };
 
     const item = await MenuItem.findByIdAndUpdate(req.params.id, updateData, {
