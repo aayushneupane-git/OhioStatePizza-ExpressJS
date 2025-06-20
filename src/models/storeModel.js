@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const storeSchema = new mongoose.Schema({
   name: String,
   address: String,
+  zipCode:Number,
   phone: String,
   website: String,
   openTime: String,

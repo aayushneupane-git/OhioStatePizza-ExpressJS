@@ -42,6 +42,7 @@ exports.createStoreWithManager = async (req, res) => {
       phone,
       website,
       openTime,
+      zipCode,
       status,
       location: {
         type: "Point",
@@ -92,6 +93,7 @@ exports.updateStore = async (req, res) => {
   try {
     const update = req.body;
 
+    console.log(update)
     // Optional: if ZIP is being updated, re-geocode
     if (update.zipCode) {
       const { lat, lng } = await geocodeZip(update.zipCode);
