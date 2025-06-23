@@ -6,6 +6,7 @@ const reviewRoutes = require("./src/routes/reviewRoutes");
 const storeRoutes = require("./src/routes/storeRoutes");
 const employeeRoutes = require("./src/routes/employeeRoutes");
 const nearestStore = require("./src/routes/nearestLocation");
+const ordersRoutes = require("./src/routes/orderRoutes");
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/stores", storeRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/location", nearestStore);
+app.use("/api/orders", ordersRoutes);
 
 
 
