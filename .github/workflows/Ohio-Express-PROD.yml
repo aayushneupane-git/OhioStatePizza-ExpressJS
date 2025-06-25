@@ -39,6 +39,6 @@ jobs:
             npm install
 
             echo "🚀 Starting with PM2..."
-            pm2 restart express-app || pm2 start src/server.js --name "express-app"
+            pm2 restart express-app || pm2 start ./server.js --name "express-app"
 
             echo "✅ Deployment done!"
