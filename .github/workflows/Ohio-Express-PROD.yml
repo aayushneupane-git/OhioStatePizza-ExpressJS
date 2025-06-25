@@ -1,4 +1,4 @@
-name: 🚀 Deploy to Contabo VPS
+name: 🚀 Deploy to Contabo VPS via SSH + Password
 
 on:
   push:
@@ -7,18 +7,22 @@ on:
 
 jobs:
   deploy:
-    name: 🖥️ Deploy to Server
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
 
-      - name: 🛠️ Setup SSH Key
-        uses: webfactory/ssh-agent@v0.9.0
+      - name: 🚀 Deploy using SSH with password
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: 🐧 Run deploy script on Contabo
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "bash -s" < ./deploy.sh
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+            cd /var/www/my-express-app || git clone https://github.com/your-username/your-repo.git /var/www/my-express-app
+            cd /var/www/my-express-app
+            git pull origin main
+            npm install
+            pm2 restart my-express-app || pm2 start src/server.js --name "my-express-app"
