@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
-            cd /var/www/my-express-app || git clone https://github.com/your-username/your-repo.git /var/www/my-express-app
+            cd /var/www/my-express-app || git clone https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git /var/www/my-express-app
             cd /var/www/my-express-app
             git pull origin main
             npm install
