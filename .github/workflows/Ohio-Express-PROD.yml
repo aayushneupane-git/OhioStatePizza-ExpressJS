@@ -1,4 +1,4 @@
-name: 🚀 Deploy to Contabo VPS via SSH + Password
+name: 🚀 Deploy to Contabo VPS (Password SSH)
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
 
-      - name: 🚀 Deploy using SSH with password
+      - name: 🔐 SSH & Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -21,8 +21,24 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
-            cd /var/www/my-express-app || git clone https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git /var/www/my-express-app
-            cd /var/www/my-express-app
-            git pull origin main
+            APP_DIR="/var/www/express-app"
+            REPO_URL="https://github.com/your-username/your-repo.git"
+
+            echo "📁 Checking if project folder exists..."
+            if [ -d "$APP_DIR" ]; then
+              echo "🔄 Project exists. Pulling latest code..."
+              cd $APP_DIR
+              git pull origin main
+            else
+              echo "📦 Cloning project..."
+              git clone $REPO_URL $APP_DIR
+              cd $APP_DIR
+            fi
+
+            echo "📦 Installing dependencies..."
             npm install
-            pm2 restart my-express-app || pm2 start src/server.js --name "my-express-app"
+
+            echo "🚀 Starting with PM2..."
+            pm2 restart express-app || pm2 start src/server.js --name "express-app"
+
+            echo "✅ Deployment done!"
