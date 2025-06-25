@@ -82,7 +82,7 @@ const validateUpdateOrder = [
   body('paymentInfo.last4').optional().isLength({ min: 4, max: 4 }).isNumeric(),
 
   // Status Validation
-  body('status').optional().isIn(['pending', 'confirmed', 'cancelled', 'completed'])
+  body('status').optional().isIn(['pending', 'cooking', 'cancelled', 'delivery', 'completed'])
 ];
 
 const validateOrderId = [

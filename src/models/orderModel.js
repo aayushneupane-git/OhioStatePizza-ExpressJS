@@ -69,7 +69,7 @@ const carryoutInfoSchema = new Schema({
       message: '{VALUE} is not supported'
     },
     default: 'asap'
-  },
+  },  
   scheduledTime: { 
     type: String,
     validate: {
@@ -128,7 +128,7 @@ const orderSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+    enum: ['pending', 'cooking', 'cancelled', 'delivery', 'completed'],
     default: 'pending'
   }
 }, {
