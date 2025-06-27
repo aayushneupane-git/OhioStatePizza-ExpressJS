@@ -1,54 +1,22 @@
-name: 🚀 Deploy Backend with Nginx Auto-Reload
+name: Deploy Backend
 on:
   push:
     branches: [main]
-    paths:
-      - '**/*.js'
-      - 'package.json'
-      - '.env'
-      - 'config/**'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 🔐 SSH Deployment
+      - name: SSH and Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            # 1. Setup environment
-            BACKEND_DIR="/var/www/express-app"
-            cd ~
-
-            # 2. Atomic deployment
-            if [ -d "$BACKEND_DIR" ]; then
-              echo "🔄 Updating existing deployment..."
-              cd $BACKEND_DIR
-              git fetch --all
-              git reset --hard origin/main
-            else
-              echo "📦 Fresh installation..."
-              git clone https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git $BACKEND_DIR
-              cd $BACKEND_DIR
-            fi
-
-            # 3. Install dependencies
-            npm ci --production
-
-            # 4. PM2 management
-            pm2 restart express-backend --update-env || \
-            pm2 start server.js --name express-backend
-
-            # 5. Conditional Nginx reload for API routes
-            if git diff --name-only HEAD~1 HEAD | grep -q -E '\.env|config/'; then
-              echo "🔧 Detected backend config change - reloading Nginx"
-              sudo nginx -t && sudo systemctl reload nginx
-            fi
-
-            # 6. Verification
-            echo "✅ Deployment status:"
-            curl -Is http://localhost:4001/api/stores | head -n 1
-            pm2 list
+            cd /var/www/express-app
+            git pull origin main
+            npm install
+            pm2 restart express-app || pm2 start server.js --name express-app
+            sudo nginx -t && sudo systemctl restart nginx
+            echo "Backend deployed successfully"
