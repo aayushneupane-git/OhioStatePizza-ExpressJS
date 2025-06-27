@@ -14,10 +14,7 @@ const app = express();
 
 // 🟢 Add CORS middleware
 const cors = require('cors');
-app.use(cors({
-  origin: ['https://ohiostatepizzas.com', 'https://admin.ohiostatepizzas.com'],
-  credentials: true
-}));
+app.use(cors());
 
 // 🟢 Body parsing middleware (optional, if you’re using JSON)
 app.use(express.json());
