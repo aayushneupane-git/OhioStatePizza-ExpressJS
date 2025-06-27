@@ -214,7 +214,7 @@ class OrderController {
       });
     } catch (error) {
       console.error('Error fetching customer orders:', error);
-      res.status(500).json({ error: 'Failed to fetch customer orders' });
+      res.status(500).json({ error: 'Failed to fetch customer orders'});
     }
   }
 }
