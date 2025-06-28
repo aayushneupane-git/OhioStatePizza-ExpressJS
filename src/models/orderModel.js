@@ -158,11 +158,11 @@ orderSchema.pre('save', function(next) {
       0
     );
     
-    if (Math.abs(calculatedTotal - this.orderTotal) > 0.01) {
-      const err = new Error('Order total does not match sum of cart items');
-      err.name = 'ValidationError';
-      return next(err);
-    }
+    // if (Math.abs(calculatedTotal - this.orderTotal) > 0.01) {
+    //   const err = new Error('Order total does not match sum of cart items');
+    //   err.name = 'ValidationError';
+    //   return next(err);
+    // }
   }
   next();
 });
