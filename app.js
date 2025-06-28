@@ -7,7 +7,7 @@ const storeRoutes = require("./src/routes/storeRoutes");
 const employeeRoutes = require("./src/routes/employeeRoutes");
 const nearestStore = require("./src/routes/nearestLocation");
 const ordersRoutes = require("./src/routes/orderRoutes");
-
+const paymentRoutes = require("./src/routes/paymentRoutes");
 dotenv.config();
 
 const app = express();
@@ -27,7 +27,7 @@ app.use("/api/stores", storeRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/location", nearestStore);
 app.use("/api/orders", ordersRoutes);
-
+app.use("/api/payment", paymentRoutes);
 
 
 app.get('/api/startup-check', (req, res) => {
