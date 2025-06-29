@@ -1,4 +1,5 @@
 name: Deploy Backend
+
 on:
   push:
     branches: [main]
@@ -6,6 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: SSH and Deploy
         uses: appleboy/ssh-action@v1.0.3
@@ -14,9 +16,21 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
+            echo "🔐 Setting up environment variables"
+            echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" > /var/www/express-app/.env
+            echo "NODE_ENV=production" >> /var/www/express-app/.env
+
+            echo "📦 Pulling latest code"
             cd /var/www/express-app
             git pull origin main
+
+            echo "📦 Installing dependencies"
             npm install
-            pm2 restart express-app || NODE_ENV=production pm2 start server.js --name express-app --env production
+
+            echo "🚀 Restarting server with PM2"
+            pm2 restart express-app || pm2 start server.js --name express-app
+
+            echo "🔁 Reloading Nginx"
             sudo nginx -t && sudo systemctl restart nginx
-            echo "Backend deployed successfully"
+
+            echo "✅ Backend deployed successfully"
