@@ -48,7 +48,6 @@ exports.updateReview = async (req, res, next) => {
     next(error);
   }
 };
-
 // DELETE a review
 exports.deleteReview = async (req, res, next) => {
   try {
