@@ -9,29 +9,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add server to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
       - name: SSH and Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
+          envs: STRIPE_SECRET_KEY
           script: |
-            echo "📁 Switching to project directory"
-            cd /var/www/express-app
+            echo "🔐 Setting up environment variables"
+            echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" > /var/www/express-app/.env
+            echo "NODE_ENV=production" >> /var/www/express-app/.env
 
             echo "📦 Pulling latest code"
+            cd /var/www/express-app
             git pull origin main
-
-            echo "🔐 Writing .env file"
-            cat <<EOF > .env
-            NODE_ENV=production
-            STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}
-            EOF
 
             echo "📦 Installing dependencies"
             npm install
