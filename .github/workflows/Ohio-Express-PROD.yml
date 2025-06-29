@@ -17,6 +17,6 @@ jobs:
             cd /var/www/express-app
             git pull origin main
             npm install
-            NODE_ENV=production pm2 start server.js --name express-app --env production
+            pm2 restart express-app || NODE_ENV=production pm2 start server.js --name express-app --env production
             sudo nginx -t && sudo systemctl restart nginx
             echo "Backend deployed successfully"
