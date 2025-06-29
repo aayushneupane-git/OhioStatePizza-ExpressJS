@@ -28,7 +28,7 @@ jobs:
 
             if [ ! -d ".git" ]; then
               echo "🔄 Cloning repository..."
-              git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git .  # replace with your repo URL
+              git clone https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git
             else
               echo "🔄 Pulling latest changes..."
               git pull origin main
