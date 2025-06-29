@@ -40,6 +40,3 @@ jobs:
             npm install
             # If using PM2
             pm2 start npm --name express-app -- run prod || pm2 restart express-app
-            # If not using PM2
-            # killall node || true
-            # nohup npm start > app.log 2>&1 &
