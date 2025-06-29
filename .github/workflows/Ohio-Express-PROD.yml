@@ -2,7 +2,7 @@ name: Deploy Backend
 
 on:
   push:
-    branches: [main]  # Trigger deploy only on main branch
+    branches: [main]
 
 jobs:
   deploy:
@@ -48,9 +48,9 @@ jobs:
             echo "🔐 Writing .env.production..."
             echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" > .env.production
 
-            echo "🚦 Restarting backend with PM2..."
-            pm2 start npm --name express-app -- run start || pm2 restart express-app
+            echo "🚦 Starting/Restarting backend with PM2 (production mode)..."
+            pm2 start npm --name express-app -- run prod || pm2 restart express-app
 
             echo "🔁 Testing and restarting Nginx..."
             sudo nginx -t && sudo systemctl restart nginx
-            echo "✅ Backend deployed successfully"
+            echo "✅ Backend deployed successfully in production mode"
