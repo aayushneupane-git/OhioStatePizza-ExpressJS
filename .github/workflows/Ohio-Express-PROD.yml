@@ -2,7 +2,7 @@ name: Deploy Backend
 
 on:
   push:
-    branches: [main]  # Change if your production branch is different
+    branches: [main]
 
 jobs:
   deploy:
@@ -22,15 +22,22 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           envs: STRIPE_SECRET_KEY
           script: |
-            cd /var/www/express-app  # change to your actual path on server
+            echo "📁 Creating app directory if not exists..."
+            mkdir -p /var/www/express-app
+            cd /var/www/express-app
 
-            echo "🔄 Pulling latest code..."
-            git pull origin main
+            if [ ! -d ".git" ]; then
+              echo "🔄 Cloning repository..."
+              git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git .  # replace with your repo URL
+            else
+              echo "🔄 Pulling latest changes..."
+              git pull origin main
+            fi
 
             echo "📦 Installing dependencies..."
             npm install
 
-            echo "🔐 Setting environment variables..."
+            echo "🔐 Writing environment variables to .env.production..."
             echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" > .env.production
 
             echo "🚀 Restarting app with PM2..."
