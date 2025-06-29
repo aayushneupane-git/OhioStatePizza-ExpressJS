@@ -35,7 +35,6 @@ exports.createStoreWithManager = async (req, res) => {
     }
 
     const { lat, lng } = await geocodeZip(zipCode);
-
     const store = await Store.create({
       name,
       address,
