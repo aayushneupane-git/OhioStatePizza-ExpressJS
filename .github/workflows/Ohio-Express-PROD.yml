@@ -27,16 +27,14 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY" > .env.production
-          echo "NODE_ENV=production" >> .env.production
-          # Add other production environment variables here
-
+          echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY" > .env
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
+          envs: ${{ secrets.STRIPE_SECRET_KEY }}
           script: |
             cd /var/www/express-app
             git pull origin main
