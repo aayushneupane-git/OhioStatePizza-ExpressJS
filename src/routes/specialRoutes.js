@@ -7,7 +7,6 @@ const specialController = require('../controller/specialController');
 // Use memory storage to keep image in buffer
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-
 // Routes
 router.post('/', upload.single('image'), specialController.createSpecial);
 router.get('/', specialController.getAllSpecials);
