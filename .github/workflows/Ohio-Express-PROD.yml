@@ -2,7 +2,7 @@ name: Deploy Backend
 
 on:
   push:
-    branches: [main]
+    branches: [main]  # Trigger deploy only on main branch
 
 jobs:
   deploy:
@@ -22,23 +22,36 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           envs: STRIPE_SECRET_KEY
           script: |
-            echo "📁 Creating app directory if not exists..."
-            mkdir -p /var/www/express-app
-            cd /var/www/express-app
+            BACKEND_DIR="/var/www/express-app"
+            BACKEND_REPO="https://github.com/YOUR_USERNAME/YOUR_BACKEND_REPO.git"  # CHANGE THIS
 
-            if [ ! -d ".git" ]; then
-              echo "🔄 Cloning repository..."
-              git clone https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git
-            else
-              echo "🔄 Pulling latest changes..."
+            echo "🚀 Starting Backend Deployment"
+
+            if [ ! -d "$BACKEND_DIR" ]; then
+              echo "📁 Directory doesn't exist, cloning backend repo..."
+              sudo mkdir -p /var/www
+              git clone $BACKEND_REPO $BACKEND_DIR
+            fi
+
+            cd $BACKEND_DIR
+
+            if [ -d ".git" ]; then
+              echo "🔄 Pulling latest code..."
+              git reset --hard
+              git clean -fd
               git pull origin main
             fi
 
             echo "📦 Installing dependencies..."
             npm install
 
-            echo "🔐 Writing environment variables to .env.production..."
+            echo "🔐 Writing .env.production..."
             echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" > .env.production
 
-            echo "🚀 Restarting app with PM2..."
-            pm2 start npm --name "express-app" -- start || pm2 restart express-app
+            echo "🚦 Restarting backend with PM2..."
+            pm2 start "npm run start" --name express-app || pm2 restart express-app
+
+            echo "🔁 Restarting Nginx..."
+            sudo nginx -t && sudo systemctl restart nginx
+
+            echo "✅ Backend deployed successfully"
