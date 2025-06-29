@@ -23,7 +23,7 @@ jobs:
           envs: STRIPE_SECRET_KEY
           script: |
             BACKEND_DIR="/var/www/express-app"
-            BACKEND_REPO="https://github.com/YOUR_USERNAME/YOUR_BACKEND_REPO.git"  # CHANGE THIS
+            BACKEND_REPO="https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git
 
             echo "🚀 Starting Backend Deployment"
 
