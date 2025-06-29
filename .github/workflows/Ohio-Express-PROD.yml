@@ -2,12 +2,18 @@ name: Deploy Backend
 
 on:
   push:
-    branches: [main]
+    branches: [main]  # Change if your production branch is different
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
       - name: SSH and Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -16,20 +22,16 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           envs: STRIPE_SECRET_KEY
           script: |
-            echo "🔐 Setting environment variables"
-            echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" > /var/www/express-app/.env
-            echo "NODE_ENV=production" >> /var/www/express-app/.env
+            cd /var/www/express-app  # change to your actual path on server
 
-            echo "📂 Navigating to app directory"
-            cd /var/www/express-app
-            echo "📦 Pulling latest code"
+            echo "🔄 Pulling latest code..."
             git pull origin main
+
+            echo "📦 Installing dependencies..."
             npm install
 
-            echo "🚀 Restarting server with PM2"
-            pm2 restart express-app || pm2 start server.js --name express-app
+            echo "🔐 Setting environment variables..."
+            echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" > .env.production
 
-            echo "🔁 Reloading Nginx"
-            sudo nginx -t && sudo systemctl restart nginx
-
-            echo "✅ Deployment completed"
+            echo "🚀 Restarting app with PM2..."
+            pm2 start npm --name "express-app" -- start || pm2 restart express-app
