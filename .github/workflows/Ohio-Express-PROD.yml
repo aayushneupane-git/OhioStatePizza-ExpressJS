@@ -1,8 +1,10 @@
-name: Node.js CD Pipeline
+name: Node.js CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 env:
   STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
@@ -13,34 +15,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-    
-    - name: Install dependencies
-      run: npm install --production
-      
-    - name: Create .env file
-      run: |
-        echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY" > .env.production
-        echo "NODE_ENV=production" >> .env.production
-        # Add other production environment variables here
-        
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          cd /var/www/express-app
-          git pull origin main
-          npm install --production
-          # If using PM2
-          pm2 restart express-app
-          # If not using PM2
-          # killall node || true
-          # npm start > app.log 2>&1 &
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install --production
+
+      - name: Create .env file
+        run: |
+          echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY" > .env.production
+          echo "NODE_ENV=production" >> .env.production
+          # Add other production environment variables here
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            cd /var/www/express-app
+            git pull origin main
+            npm install
+            # If using PM2
+            pm2 start npm --name express-app -- run prod || pm2 restart express-app
+            # If not using PM2
+            # killall node || true
+            # nohup npm start > app.log 2>&1 &
