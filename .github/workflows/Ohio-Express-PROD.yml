@@ -23,12 +23,12 @@ jobs:
           envs: STRIPE_SECRET_KEY
           script: |
             BACKEND_DIR="/var/www/express-app"
-            BACKEND_REPO="https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git
+            BACKEND_REPO="https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git"
 
             echo "🚀 Starting Backend Deployment"
 
             if [ ! -d "$BACKEND_DIR" ]; then
-              echo "📁 Directory doesn't exist, cloning backend repo..."
+              echo "📁 Directory doesn't exist, creating and cloning backend repo..."
               sudo mkdir -p /var/www
               git clone $BACKEND_REPO $BACKEND_DIR
             fi
@@ -49,9 +49,9 @@ jobs:
             echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" > .env.production
 
             echo "🚦 Restarting backend with PM2..."
-            pm2 start "npm run start" --name express-app || pm2 restart express-app
+            pm2 start npm --name express-app -- run start || pm2 restart express-app
 
-            echo "🔁 Restarting Nginx..."
+            echo "🔁 Testing and restarting Nginx..."
             sudo nginx -t && sudo systemctl restart nginx
 
             echo "✅ Backend deployed successfully"
