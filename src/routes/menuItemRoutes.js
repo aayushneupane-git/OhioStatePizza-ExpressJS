@@ -13,5 +13,4 @@ router.get('/', menuItemController.getAllMenuItems);
 router.get('/:id', menuItemController.getMenuItemById);
 router.put('/:id', menuItemController.updateMenuItem);
 router.delete('/:id', menuItemController.deleteMenuItem);
-
 module.exports = router;
