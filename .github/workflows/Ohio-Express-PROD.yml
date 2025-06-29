@@ -1,56 +1,68 @@
-name: Deploy Backend
+name: Node.js CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+  NODE_ENV: production
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add server to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Run tests
+      run: npm test
+      env:
+        NODE_ENV: test
 
-      - name: SSH and Deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          envs: STRIPE_SECRET_KEY
-          script: |
-            BACKEND_DIR="/var/www/express-app"
-            BACKEND_REPO="https://github.com/aayushneupane-git/OhioStatePizza-ExpressJS.git"
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
 
-            echo "🚀 Starting Backend Deployment"
-
-            if [ ! -d "$BACKEND_DIR" ]; then
-              echo "📁 Directory doesn't exist, creating and cloning backend repo..."
-              sudo mkdir -p /var/www
-              git clone $BACKEND_REPO $BACKEND_DIR
-            fi
-
-            cd $BACKEND_DIR
-
-            if [ -d ".git" ]; then
-              echo "🔄 Pulling latest code..."
-              git reset --hard
-              git clean -fd
-              git pull origin main
-            fi
-
-            echo "📦 Installing dependencies..."
-            npm install
-
-            echo "🔐 Writing .env.production..."
-            echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}" > .env.production
-
-            echo "🚦 Starting/Restarting backend with PM2 (production mode)..."
-            pm2 start npm --name express-app -- run prod || pm2 restart express-app
-
-            echo "🔁 Testing and restarting Nginx..."
-            sudo nginx -t && sudo systemctl restart nginx
-            echo "✅ Backend deployed successfully in production mode"
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install --production
+      
+    - name: Create .env file
+      run: |
+        echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY" > .env.production
+        echo "NODE_ENV=production" >> .env.production
+        # Add other production environment variables here
+        
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          cd /var/www/express-app
+          git pull origin main
+          npm install
+          # If using PM2
+          pm2 start npm --name express-app -- run prod || pm2 restart express-app
+          # If not using PM2
+          # killall node || true
+          # nohup npm start > app.log 2>&1 &
