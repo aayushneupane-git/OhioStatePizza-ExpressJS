@@ -72,3 +72,23 @@ exports.loginEmployee = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// 🔐 Get authenticated user's role, email, and store info
+exports.getEmployeeProfile = async (req, res) => {
+  try {
+    // `req.user.id` should come from authentication middleware after token verification
+    const employee = await Employee.findById(req.user.id).select('email role storeId');
+
+    if (!employee) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+
+    res.json({
+      email: employee.email,
+      role: employee.role,
+      storeId: employee.storeId,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
