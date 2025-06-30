@@ -11,5 +11,4 @@ router.post('/login', employeeController.loginEmployee);
 router.get('/profile',authenticate, employeeController.getEmployeeProfile);
 // Manager creates cook
 router.post('/create-cook', authenticate, authorize('manager'), employeeController.createCook);
-
 module.exports = router;
