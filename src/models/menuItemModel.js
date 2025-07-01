@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const optionItemSchema = new mongoose.Schema(
   {
     label: String,
-    priceModifier: Number
+    priceModifier: Number,
   },
   { _id: false }
 );
@@ -13,7 +13,7 @@ const optionItemSchema = new mongoose.Schema(
 const optionGroupSchema = new mongoose.Schema(
   {
     isMultiple: { type: Boolean, required: true },
-    values: [optionItemSchema]
+    values: [optionItemSchema],
   },
   { _id: false }
 );
@@ -29,7 +29,7 @@ const optionsSchema = new mongoose.Schema(
     veggies: optionGroupSchema,
     dips: optionGroupSchema,
     flavors: optionGroupSchema,
-    extras: optionGroupSchema
+    extras: optionGroupSchema,
   },
   { _id: false }
 );
@@ -45,18 +45,15 @@ const menuItemSchema = new mongoose.Schema({
     of: {
       type: String,
       enum: ["Available", "Unavailable"],
-      default: "Available"
+      default: "Available",
     },
-    default: {}
+    default: {},
   },
   options: {
     type: optionsSchema,
-    default: {}
+    default: {},
   },
-  // image: {
-  //   data: Buffer,
-  //   contentType: String
-  // }
+  image: { type: String, required: true },
 });
 
 module.exports = mongoose.model("MenuItem", menuItemSchema);

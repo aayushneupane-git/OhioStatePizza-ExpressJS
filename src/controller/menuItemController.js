@@ -1,4 +1,4 @@
-const MenuItem = require('../models/menuItemModel');
+const MenuItem = require("../models/menuItemModel");
 
 // CREATE
 exports.createMenuItem = async (req, res) => {
@@ -8,8 +8,9 @@ exports.createMenuItem = async (req, res) => {
       description,
       category,
       price,
-      options, // JSON string
-      availabilityByStore // JSON string
+      options, // JSON string or object
+      availabilityByStore, // JSON string or object
+      image, // base64 string
     } = req.body;
 
     const menuItem = new MenuItem({
@@ -17,21 +18,18 @@ exports.createMenuItem = async (req, res) => {
       description,
       category,
       price: parseFloat(price),
-      options,
-      availabilityByStore
+      options: typeof options === "string" ? JSON.parse(options) : options,
+      availabilityByStore:
+        typeof availabilityByStore === "string"
+          ? JSON.parse(availabilityByStore)
+          : availabilityByStore,
+      image,
     });
-
-    // if (req.file) {
-    //   menuItem.image = {
-    //     data: req.file.buffer,
-    //     contentType: req.file.mimetype
-    //   };
-    // }
 
     await menuItem.save();
     res.status(201).json(menuItem);
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -44,16 +42,23 @@ exports.updateMenuItem = async (req, res) => {
       description: req.body.description,
       category: req.body.category,
       price: parseFloat(req.body.price),
-      options: req.body.options,
-      availabilityByStore: req.body.availabilityByStore
+      options:
+        typeof req.body.options === "string"
+          ? JSON.parse(req.body.options)
+          : req.body.options,
+      availabilityByStore:
+        typeof req.body.availabilityByStore === "string"
+          ? JSON.parse(req.body.availabilityByStore)
+          : req.body.availabilityByStore,
+      image: req.body.image,
     };
 
     const item = await MenuItem.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
 
-    if (!item) return res.status(404).json({ error: 'Item not found' });
+    if (!item) return res.status(404).json({ error: "Item not found" });
     res.status(200).json(item);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -64,8 +69,6 @@ exports.updateMenuItem = async (req, res) => {
 exports.getAllMenuItems = async (req, res) => {
   try {
     const items = await MenuItem.find();
- 
-
     res.status(200).json(items);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -76,14 +79,9 @@ exports.getAllMenuItems = async (req, res) => {
 exports.getMenuItemById = async (req, res) => {
   try {
     const item = await MenuItem.findById(req.params.id);
-    if (!item) return res.status(404).json({ error: 'Item not found' });
+    if (!item) return res.status(404).json({ error: "Item not found" });
 
-    const response = item.toObject();
-    // if (item.image?.data) {
-    //   response.imageBase64 = item.image.data.toString('base64');
-    // }
-
-    res.status(200).json(response);
+    res.status(200).json(item);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -93,9 +91,9 @@ exports.getMenuItemById = async (req, res) => {
 exports.deleteMenuItem = async (req, res) => {
   try {
     const item = await MenuItem.findByIdAndDelete(req.params.id);
-    if (!item) return res.status(404).json({ error: 'Item not found' });
+    if (!item) return res.status(404).json({ error: "Item not found" });
 
-    res.status(200).json({ message: 'Menu item deleted successfully' });
+    res.status(200).json({ message: "Menu item deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
