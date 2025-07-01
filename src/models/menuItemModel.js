@@ -18,21 +18,6 @@ const optionGroupSchema = new mongoose.Schema(
   { _id: false }
 );
 
-// Complete options schema
-const optionsSchema = new mongoose.Schema(
-  {
-    sizes: optionGroupSchema,
-    addOns: optionGroupSchema,
-    crusts: optionGroupSchema,
-    sauces: optionGroupSchema,
-    meats: optionGroupSchema,
-    veggies: optionGroupSchema,
-    dips: optionGroupSchema,
-    flavors: optionGroupSchema,
-    extras: optionGroupSchema,
-  },
-  { _id: false }
-);
 
 // Menu item schema
 const menuItemSchema = new mongoose.Schema({
@@ -50,10 +35,10 @@ const menuItemSchema = new mongoose.Schema({
     default: {},
   },
   options: {
-    type: optionsSchema,
+    type: Object,
     default: {},
   },
-  image: { type: String, required: true },
+  image: { type: String},
 });
 
 module.exports = mongoose.model("MenuItem", menuItemSchema);
