@@ -100,7 +100,7 @@ router.delete('/:id', async (req, res) => {
       );
     }
 
-    await category.remove();
+    await category.deleteOne()
     res.json({ 
       message: 'Category deleted',
       affectedMenuItems: itemsUsingCategory.length
