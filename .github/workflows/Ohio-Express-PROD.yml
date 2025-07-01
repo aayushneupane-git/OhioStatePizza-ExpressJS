@@ -20,25 +20,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache: 'npm'
-
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm ci --production
+        run: npm install
 
       - name: Create .env file
         run: |
           echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" > .env
-          echo "NODE_ENV=production" >> .env
-          # Add other environment variables as needed
-
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -47,9 +35,8 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
             cd /var/www/express-app
-            git fetch origin main
-            git reset --hard origin/main
-            npm ci --production
+            git pull origin main
+            npm install
             # Check if PM2 process exists and restart, otherwise start new
             if pm2 describe express-app > /dev/null 2>&1; then
               echo "Restarting existing PM2 process..."
