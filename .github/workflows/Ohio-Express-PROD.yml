@@ -37,13 +37,13 @@ jobs:
             cd /var/www/express-app
             git pull origin main
             npm install
-            # Check if PM2 process exists and restart, otherwise start new
+           
             if pm2 describe express-app > /dev/null 2>&1; then
               echo "Restarting existing PM2 process..."
               pm2 restart express-app --update-env
             else
               echo "Starting new PM2 process..."
-              pm2 start npm --name express-app -- run start
+              pm2 start npm --name express-app -- run prod
             fi
             # Save PM2 process list
             pm2 save
