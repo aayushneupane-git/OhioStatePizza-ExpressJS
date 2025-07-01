@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Category = require('../models/cateroryModal');
-const MenuItem = require('../models/menuItemModal'); // Make sure to import your MenuItem model
+const MenuItem = require('../models/menuItemModel'); // Make sure to import your MenuItem model
 
 // Get all categories
 router.get('/', async (req, res) => {
