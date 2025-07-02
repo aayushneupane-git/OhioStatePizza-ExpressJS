@@ -1,25 +1,25 @@
-const mongoose = require('mongoose');
-
-const comboSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
+const comboSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    description: String,
+    price: { type: Number, required: true },
+    items: [
+      {
+        item: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "MenuItem",
+          required: true,
+        },
+        toppings: [
+          {
+            name: { type: String, required: true },
+            extraPrice: { type: Number, default: 0 },
+          },
+        ],
+      },
+    ],
+    isSpecial: { type: Boolean, default: false },
+    image: String,
   },
-  description: String,
-  price: {
-    type: Number,
-    required: true
-  },
-  items: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'MenuItem'  
-  }],
-  isSpecial: {
-    type: Boolean,
-    default : false
-  },
-  image: String,
-}, { timestamps: true });
-
-const Specials = mongoose.model('Combo', comboSchema);
-module.exports = Specials;
+  { timestamps: true }
+);
