@@ -8,14 +8,15 @@ exports.createSpecial = async (req, res) => {
       name,
       description,
       price,
-      isSpecial: isSpecial === "true",
-      items: items,
+      isSpecial: isSpecial === "true" || isSpecial === true,
+      items, // <-- now valid structure
       image,
     });
 
     await special.save();
     res.status(201).json(special);
   } catch (err) {
+    console.error(err); // for debugging
     res.status(500).json({ error: err.message });
   }
 };
