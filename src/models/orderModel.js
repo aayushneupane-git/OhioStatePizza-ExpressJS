@@ -134,16 +134,6 @@ const orderSchema = new Schema({
   }
 }, {
   timestamps: true,
-  toJSON: {
-    virtuals: true,
-    transform: function(doc, ret) {
-      ret.id = ret._id;
-      ret.createdAt = doc.createdAt.toISOString();
-      delete ret._id;
-      delete ret.__v;
-      return ret;
-    }
-  }
 });
 
 // Indexes
