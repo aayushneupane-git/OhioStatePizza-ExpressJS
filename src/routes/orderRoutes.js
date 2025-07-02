@@ -10,7 +10,7 @@ const {
 } = require("../middleware/orderValidation");
 
 // Create a new order
-router.post("/", validateCreateOrder, OrderController.createOrder);
+router.post("/", OrderController.createOrder);
 
 // Get all orders with filtering and pagination
 router.get("/", validatePagination, OrderController.getAllOrders);

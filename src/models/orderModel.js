@@ -110,6 +110,7 @@ const paymentInfoSchema = new Schema({
 const orderSchema = new Schema({
   billingInfo: { type: billingInfoSchema, required: true },
   carryoutInfo: { type: carryoutInfoSchema, required: true },
+  serviceType: String,
   cartItems: { 
     type: [cartItemSchema], 
     required: true,

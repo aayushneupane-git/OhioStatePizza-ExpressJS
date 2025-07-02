@@ -11,6 +11,15 @@ const validateCreateOrder = [
     .isEmail().withMessage('Invalid email format')
     .normalizeEmail(),
 
+  // Carryout Info Validation
+  body('carryoutInfo.timeOption')
+    .isIn(['asap', 'scheduled']).withMessage("Time option must be 'asap' or 'scheduled'"),
+  body('carryoutInfo.scheduledTime')
+    .if(body('carryoutInfo.timeOption').equals('scheduled'))
+    .notEmpty().withMessage('Scheduled time is required for scheduled orders')
+    .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/).withMessage('Scheduled time must be in HH:MM format'),
+  body('carryoutInfo.address').trim().notEmpty().withMessage('Address is required'),
+
   // Cart Items Validation
   body('cartItems').isArray({ min: 1 }).withMessage('At least one cart item is required'),
   body('cartItems.*.name').trim().notEmpty().withMessage('Item name is required'),
@@ -53,6 +62,14 @@ const validateUpdateOrder = [
   body('billingInfo.lastName').optional().trim().notEmpty(),
   body('billingInfo.phone').optional().trim().notEmpty(),
   body('billingInfo.email').optional().trim().isEmail().normalizeEmail(),
+
+  // Carryout Info Validation
+  body('carryoutInfo.timeOption').optional().isIn(['asap', 'scheduled']),
+  body('carryoutInfo.scheduledTime')
+    .if(body('carryoutInfo.timeOption').equals('scheduled'))
+    .notEmpty()
+    .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
+  body('carryoutInfo.address').optional().trim().notEmpty(),
 
   // Cart Items Validation
   body('cartItems').optional().isArray({ min: 1 }),
