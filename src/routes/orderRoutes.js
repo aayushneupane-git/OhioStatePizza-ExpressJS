@@ -8,12 +8,13 @@ const {
   validateEmail,
   validatePagination,
 } = require("../middleware/orderValidation");
+const authenticateToken = require("../middleware/authMiddleware");
 
 // Create a new order
 router.post("/", OrderController.createOrder);
 
 // Get all orders with filtering and pagination
-router.get("/", validatePagination, OrderController.getAllOrders);
+router.get("/",authenticateToken, validatePagination, OrderController.getAllOrders);
 
 // Get order by ID
 router.get("/:id", validateOrderId, OrderController.getOrderById);
