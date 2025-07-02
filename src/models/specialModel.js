@@ -14,10 +14,16 @@ const comboSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
   price: { type: Number, required: true },
-  items: [comboItemSchema], // ✅ updated
+  items: [comboItemSchema],
   isSpecial: { type: Boolean, default: false },
   image: String,
 }, { timestamps: true });
+
+// ✅ Automatically populate items.item everywhere
+comboSchema.pre(/^find/, function (next) {
+  this.populate("items.item");
+  next();
+});
 
 const Specials = mongoose.model('Combo', comboSchema);
 module.exports = Specials;

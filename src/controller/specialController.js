@@ -24,7 +24,7 @@ exports.createSpecial = async (req, res) => {
 // READ all specials
 exports.getAllSpecials = async (req, res) => {
   try {
-    const specials = await Specials.find().populate("items");
+    const specials = await Specials.find().populate("items.item");
     res.status(200).json(specials);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -34,7 +34,8 @@ exports.getAllSpecials = async (req, res) => {
 // READ one special
 exports.getSpecialById = async (req, res) => {
   try {
-    const special = await Specials.findById(req.params.id).populate("items");
+    const special = await Specials.findById(req.params.id).populate("items.item");
+
     if (!special) return res.status(404).json({ message: "Special not found" });
 
     const result = special.toObject();
