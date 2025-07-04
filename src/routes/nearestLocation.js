@@ -83,16 +83,14 @@ router.get("/items-by-zip/:zipCode", async (req, res) => {
       });
     }
 
-    // Optimize menu item query
-    const storeIds = finalStores.map((store) => store._id);
+    const nearestStoreId = finalStores[0]._id.toString();
+
     const menuItems = await MenuItem.find({
-      $or: storeIds.map((storeId) => ({
-        [`availabilityByStore.${storeId}`]: "Available",
-      })),
+      [`availabilityByStore.${nearestStoreId}`]: "Available",
     })
       .select("name category price options")
       .lean();
-
+      
     res.json({
       serviceAvailable: true,
       nearestStore: {

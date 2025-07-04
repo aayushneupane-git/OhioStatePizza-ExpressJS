@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const orderItemSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    description: { type: String },
-  },
-  { _id: false }
-);
 
 const cartItemSchema = new Schema(
   {
@@ -24,7 +17,6 @@ const cartItemSchema = new Schema(
     },
     description: { type: String },
     selectedOptions: { type: Map, of: Schema.Types.Mixed },
-    items: [orderItemSchema],
   },
   { _id: false }
 );
