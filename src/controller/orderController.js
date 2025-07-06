@@ -1,6 +1,7 @@
 const Order = require("../models/orderModel");
 const { validationResult } = require("express-validator");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const normalizeEmail = require("../utils/emailNormalizer");
 
 class OrderController {
   /**
@@ -257,15 +258,17 @@ class OrderController {
       const { email } = req.params;
       const { page = 1, limit = 10 } = req.query;
 
+      const normalizedEmail = normalizeEmail(email);
+
       const orders = await Order.find({
-        "billingInfo.email": email.toLowerCase(),
+        "billingInfo.email": normalizedEmail,
       })
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(parseInt(limit));
 
       const total = await Order.countDocuments({
-        "billingInfo.email": email.toLowerCase(),
+        "billingInfo.email": normalizedEmail,
       });
 
       res.json({
