@@ -1,9 +1,11 @@
 function normalizeEmail(email) {
-  const [local, domain] = email.toLowerCase().split("@");
-
-  // Normalize only Gmail addresses (ignore dots in the local part)
-  if (domain === "gmail.com") { 
-    return `${local.replace(/\./g, "")}@${domain}`;
+  let [local, domain] = email.toLowerCase().split("@");
+  console.log(`${local}@${domain}`);
+  if (domain === "gmail.com" || domain === "googlemail.com") {
+    // Remove everything after a '+' (alias)
+    local = local.split("+")[0];
+    // Remove all dots
+    local = local.replace(/\./g, "");
   }
 
   return `${local}@${domain}`;

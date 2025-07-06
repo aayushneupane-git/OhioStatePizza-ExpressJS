@@ -21,7 +21,7 @@ class OrderController {
       if (orderData.createdAt) {
         orderData.createdAt = new Date(orderData.createdAt);
       }
-
+      orderData.billingInfo.email = normalizeEmail(orderData.billingInfo.email);
       const order = new Order(orderData);
       const savedOrder = await order.save();
 
