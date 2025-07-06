@@ -8,7 +8,6 @@ const geocodeZip = async (zipCode) => {
   try {
     const response = await axios.get(url);
     const data = response.data;
-    console.log(data.results[0].geometry)
 
     if (data.results.length > 0) {
       const { lat, lng } = data.results[0].geometry;
