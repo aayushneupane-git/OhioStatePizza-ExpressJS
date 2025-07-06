@@ -8,7 +8,6 @@ class OrderController {
    * Create a new order
    */
   static async createOrder(req, res) {
-    console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -33,7 +32,6 @@ class OrderController {
           details: error.message,
         });
       }
-      console.error("Error creating order:", error);
       res.status(500).json({
         error: "Failed to create order",
         details: error.message,
@@ -109,10 +107,6 @@ class OrderController {
           .lean(),
         Order.countDocuments(query),
       ]);
-
-      // DEBUG: Log the query and user info
-      console.log("Query:", query);
-      console.log("User:", { role, storeId: req.user.storeId });
 
       return res.status(200).json({
         success: true,
