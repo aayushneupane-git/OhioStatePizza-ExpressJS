@@ -1,7 +1,7 @@
 const Order = require("../models/orderModel");
 const { validationResult } = require("express-validator");
 const mongoose = require("mongoose");
-const normalizeEmail = require("../utils/emailNormalizer");
+const normalizeEmail = require("../config/emailNormalizer");
 
 class OrderController {
   /**
