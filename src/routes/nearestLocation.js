@@ -6,7 +6,7 @@ const haversine = require("haversine-distance");
 const geocodeZip = require("../config/geocodeAPI");
 
 const router = express.Router();
-const MAX_SERVICE_DISTANCE = 28000; // 10km in meters
+const MAX_SERVICE_DISTANCE = 5000; // 10km in meters
 
 // Cache for zip code to coordinates mapping
 const zipCodeCache = new Map();
