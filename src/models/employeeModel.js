@@ -6,13 +6,12 @@ const employeeSchema = new mongoose.Schema({
   password: String,
   role: {
     type: String,
-    enum: ['superadmin', 'manager', 'cook'],
+    enum: ['superadmin', 'manager', 'cook','admin'],
     default: 'cook'
   },
   storeId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Store',
-    required: true
   }
 });
 

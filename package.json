@@ -18,9 +18,11 @@
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "haversine-distance": "^1.2.4",
+    "html2thermal": "^1.0.7",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.1",
     "multer": "^2.0.1",
+    "node-thermal-printer": "^4.5.0",
     "socket.io": "^4.8.1",
     "stripe": "^18.2.1"
   },
