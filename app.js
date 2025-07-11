@@ -9,6 +9,7 @@ const nearestStore = require("./src/routes/nearestLocation");
 const ordersRoutes = require("./src/routes/orderRoutes");
 const paymentRoutes = require("./src/routes/paymentRoutes");
 const categoryRoutes = require("./src/routes/categoryRoutes");
+const deliveryLocation = require("./src/routes/deliveryLocation");
 dotenv.config();
 
 const app = express();
@@ -31,6 +32,7 @@ app.use("/api/location", nearestStore);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/delivery-calculation", deliveryLocation);
 
 
 app.get('/api/startup-check', (req, res) => {
